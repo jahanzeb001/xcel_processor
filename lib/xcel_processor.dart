@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:excel/excel.dart';
 
-class ExcelReader {
+class ExcelProcessor {
   static Future<Map<String, dynamic>> pickAndReadExcel(
       String tableName, int rows, int column) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
