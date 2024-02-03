@@ -1,39 +1,94 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# xcel_processor
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A Flutter package for processing data from Excel files. This package provides a simple and efficient way to integrate Excel data processing into your Flutter applications.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Read data from specified rows and columns in Excel files.
+- Simple and efficient integration into Flutter applications.
 
-## Getting started
+## Getting Started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+To use this package, add the following dependency to your `pubspec.yaml` file:
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Minimal example:
 
 ```dart
-const like = 'sample';
+import 'package:flutter/material.dart';
+import 'package:xcel_processor/xcel_processor.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Xcel Processor Example'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () async {
+            var result = await ExcelProcessor.pickAndReadExcel('YourTable', 1, 2);
+            _showResultDialog(context, result);
+          },
+          child: Text('Pick and Process Excel'),
+        ),
+      ),
+    );
+  }
+
+  void _showResultDialog(BuildContext context, Map<String, dynamic> result) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Xcel Processor Result'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: _buildResultWidgets(result),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  List<Widget> _buildResultWidgets(Map<String, dynamic> result) {
+    if (result.containsKey('error')) {
+      return [
+        Text('Error: ${result['error']}'),
+      ];
+    } else {
+      return [
+        Text('Table Name: ${result['tableName']}'),
+        Text('Row: ${result['row']}'),
+        Text('Column: ${result['column']}'),
+        Text('Data: ${result['data']}'),
+      ];
+    }
+  }
+}
+
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
